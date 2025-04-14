@@ -29,6 +29,7 @@ import ShellCheck.Interface
 import ShellCheck.Parser
 import ShellCheck.Prelude
 import ShellCheck.Regex
+import ShellCheck.I18n (translate)
 
 import Control.Arrow (first)
 import Control.DeepSeq
@@ -165,7 +166,7 @@ makeComment severity id code note =
         tcComment = newComment {
             cSeverity = severity,
             cCode = code,
-            cMessage = note
+            cMessage = translate (show code) note
         }
     }
 

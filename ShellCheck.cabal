@@ -95,6 +95,7 @@ library
       ShellCheck.Parser
       ShellCheck.Prelude
       ShellCheck.Regex
+      ShellCheck.I18n
     other-modules:
       Paths_ShellCheck
     default-language: Haskell98

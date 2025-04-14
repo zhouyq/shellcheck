@@ -22,6 +22,8 @@ import           ShellCheck.Checker
 import           ShellCheck.Data
 import           ShellCheck.Interface
 import           ShellCheck.Regex
+import           ShellCheck.Prelude
+import           ShellCheck.I18n (Language(..), setLanguage)
 
 import qualified ShellCheck.Formatter.CheckStyle
 import           ShellCheck.Formatter.Format
@@ -54,6 +56,8 @@ import           System.Environment
 import           System.Exit
 import           System.FilePath
 import           System.IO
+import           System.Info
+import qualified Data.Set as Set
 
 data Flag = Flag String String
 data Status =
@@ -133,6 +137,9 @@ options = [
         "The number of wiki links to show, when applicable",
     Option "x" ["external-sources"]
         (NoArg $ Flag "externals" "true") "Allow 'source' outside of FILES",
+    Option "l" ["lang"]
+        (ReqArg (Flag "lang") "LANG")
+        "Specify language (en, zh)",
     Option "" ["help"]
         (NoArg $ Flag "help" "true") "Show this usage summary and exit"
     ]
@@ -291,6 +298,13 @@ parseOption flag options =
                                 csShellTypeOverride = Just shell
                             }
                         }
+
+        Flag "lang" lang -> do
+            case lang of
+                "en" -> liftIO $ setLanguage EN
+                "zh" -> liftIO $ setLanguage ZH
+                _ -> printErr $ "Unknown language: " ++ lang ++ ". Valid options are: en, zh"
+            return options
 
         Flag "exclude" str -> do
             new <- mapM parseNum $ filter (not . null) $ split ',' str
